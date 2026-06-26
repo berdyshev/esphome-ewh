@@ -22,7 +22,10 @@ void EWHClimate::dump_config() {
 ClimateTraits EWHClimate::traits() {
   auto traits = climate::ClimateTraits();
 
-  traits.set_supports_current_temperature(true);
+  // Deprecated: 
+  // traits.set_supports_current_temperature(true);
+  traits.add_feature_flags(climate::CLIMATE_SUPPORTS_CURRENT_TEMPERATURE);
+  
   traits.set_visual_min_temperature(ewh::MIN_TEMPERATURE);
   traits.set_visual_max_temperature(ewh::MAX_TEMPERATURE);
   traits.set_visual_temperature_step(1);
@@ -37,7 +40,9 @@ ClimateTraits EWHClimate::traits() {
       // PRESET_TIMER,
   });
 
-  traits.set_supports_action(true);
+  // Deprecated:
+  //    traits.set_supports_action(true);
+  traits.add_feature_flags(climate::CLIMATE_SUPPORTS_ACTION);
 
   return traits;
 }
