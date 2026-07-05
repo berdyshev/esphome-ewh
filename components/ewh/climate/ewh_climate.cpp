@@ -69,7 +69,10 @@ ewh_mode_t::Mode EWHClimate::to_wh_mode_(ClimateMode mode, const std::string &pr
 
 void EWHClimate::control(const ClimateCall &call) {
   const auto mode = call.get_mode().value_or(this->mode);
-  const char *preset = call.get_custom_preset().c_str();
+  // Restore upstream's safe fallback (dropped in the feature-flag API port): if this
+  // particular call doesn't specify a preset, keep using whatever preset is currently
+  // active instead of silently falling through to MODE_700W in to_wh_mode_().
+  const char *preset = call.has_custom_preset() ? call.get_custom_preset().c_str() : this->get_custom_preset().c_str();
   const auto wh_mode = this->to_wh_mode_(mode, preset);
   const auto temp = call.get_target_temperature().value_or(this->target_temperature);
   if (std::isnan(temp)) {
